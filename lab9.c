@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// RecordType
+// struct for RecordType
 struct RecordType
 {
     int id;
@@ -13,7 +13,8 @@ struct RecordType
 // Fill out this structure
 struct HashType
 {
-    struct RecordType *record; // create a pointer to a RecordType
+	//creates a recordtype pointer
+    struct RecordType *record; 
 };
 
 // Compute the hash function
@@ -75,7 +76,7 @@ void printRecords(struct RecordType pData[], int dataSz)
 // insert record into the hash table
 void insertRecord(struct HashType *hashTable, struct RecordType *record, int tableSize)
 {
-    // call the hash function to get the index
+    // calls on  the hash function to get the index
     int index = hash(record->id, tableSize);
 
     // create a new node for the record
@@ -112,18 +113,21 @@ void displayRecordsInHash(struct HashType *hashTable, int tableSize)
     {
         printf("Index %d -> ", i);
 
+		//if index is empty print out null
         if (hashTable[i].record == NULL)
         {
             printf("NULL\n");
         }
         else
         {
+			//if index is not empty add records into it
             record = hashTable[i].record;
 
             while (record != NULL)
             {
                 printf("%d, %c, %d", record->id, record->name, record->order);
 
+				//is there are more records here print the arrow 
                 if (record->next != NULL)
                 {
                     printf(" -> ");
@@ -131,22 +135,24 @@ void displayRecordsInHash(struct HashType *hashTable, int tableSize)
 
                 record = record->next;
             }
-
+			//new line
             printf("\n");
         }
     }
-
+	//two new lines 
     printf("\n\n");
 }
 
 int main(void)
 {
+	//declare pointers to the records and hashtable
     struct RecordType *pRecords;
     int recordSz = 0;
     int i;
     int hashTableSize = 10;
     struct HashType *hashTable = calloc(hashTableSize, sizeof(struct HashType));
 
+	//parse data and print 
     recordSz = parseData("input.txt", &pRecords);
     printRecords(pRecords, recordSz);
 
@@ -156,6 +162,7 @@ int main(void)
         insertRecord(hashTable, &pRecords[i], hashTableSize);
     }
 
+	//display whats in the hash table
     displayRecordsInHash(hashTable, hashTableSize);
 
     // Free all the allocated memory
@@ -165,6 +172,7 @@ int main(void)
     {
         struct RecordType *record = hashTable[i].record;
 
+		//if not empty continue on freeing 
         while (record != NULL)
         {
             struct RecordType *next = record->next;
@@ -172,7 +180,7 @@ int main(void)
             record = next;
         }
     }
-
+	//free hashTable
     free(hashTable);
 
     return 0;
